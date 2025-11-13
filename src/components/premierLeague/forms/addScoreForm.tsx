@@ -14,18 +14,49 @@ import { ErrorMessage } from '@/components/ui/errorMessage';
 const AddScoreForm = () => {
     const { addTeamScoreForm, handleAddTeamScoreSubmit } = usePremierLeagueForm();
     const premierLeagueTable = useAppSelector(selectTables).PremierLeague;
-    const teamItems = premierLeagueTable.map((team) => ({ value: team.id, label: team.name }));
 
     const [teamOneId, teamTwoId] = addTeamScoreForm.watch(['teamOneId', 'teamTwoId']);
 
-    const teamOneItems = teamItems.filter((team) => team.value !== teamTwoId?.toString());
-    const teamTwoItems = teamItems.filter((team) => team.value !== teamOneId?.toString());
+    // Helper function to check if a team has available opponents
+    const hasAvailableOpponents = (teamId: string) => {
+        const team = premierLeagueTable.find((t) => t.id === teamId);
+        if (!team) return false;
+
+        // Count how many teams this team hasn't played against yet (excluding itself)
+        const availableOpponents = premierLeagueTable.filter(
+            (opponent) => opponent.id !== teamId && !team.playedAgainst.includes(opponent.id),
+        );
+
+        return availableOpponents.length > 0;
+    };
+
+    // Only show teams that have available opponents they haven't played against
+    const selectableTeams = premierLeagueTable.filter((team) => hasAvailableOpponents(team.id));
+    const teamItems = selectableTeams.map((team) => ({ value: team.id, label: team.name }));
+
+    // Filter out the selected team and teams that have already played against the selected team
+    const getAvailableTeamsFor = (selectedTeamId?: string, excludeTeamId?: string) => {
+        if (!selectedTeamId) return teamItems;
+
+        const selectedTeam = premierLeagueTable.find((t) => t.id === selectedTeamId);
+        if (!selectedTeam) return teamItems;
+
+        return teamItems.filter(
+            (team) => team.value !== excludeTeamId?.toString() && !selectedTeam.playedAgainst.includes(team.value),
+        );
+    };
+
+    const teamOneItems = getAvailableTeamsFor(teamTwoId, teamTwoId);
+    const teamTwoItems = getAvailableTeamsFor(teamOneId, teamOneId);
+
+    const rootError = addTeamScoreForm.formState.errors.root;
 
     return (
         <FormWrapper onSubmit={addTeamScoreForm.handleSubmit(handleAddTeamScoreSubmit)}>
             <Label htmlFor="add-score-input" className="capitalize font-bold">
                 Add score
             </Label>
+            {rootError && <ErrorMessage message={rootError.message} />}
             <div className="grid grid-cols-2 gap-2">
                 <RenderItem
                     formControl={addTeamScoreForm.control}
@@ -62,7 +93,7 @@ const RenderItem = ({
                 control={formControl}
                 name={isTeamOne ? 'teamOneId' : 'teamTwoId'}
                 render={({ field, fieldState }) => (
-                    <div>
+                    <div className="truncate">
                         <Select
                             placeholder="Select a team"
                             value={field.value?.toString()}
@@ -80,7 +111,7 @@ const RenderItem = ({
                     <div>
                         <Input
                             type="number"
-                            className="h-7 font-semibold"
+                            className="h-7 font-semibold rounded-sm"
                             {...field}
                             value={field.value ? Number(field.value) : ''}
                             onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}

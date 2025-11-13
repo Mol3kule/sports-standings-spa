@@ -1,4 +1,6 @@
 export type TableType = 'PremierLeague' | 'EuroBasket' | 'Wimbledon';
+export type FormType = 'addTeam' | 'addScore';
+
 export interface Team {
     id: string;
     name: string;
@@ -11,9 +13,15 @@ export interface Team {
     playedAgainst: string[];
 }
 
+export interface FormError {
+    tableType: TableType;
+    formType: FormType;
+    message: string;
+}
+
 export interface TableState {
     tables: Record<TableType, Team[]>;
     loading: boolean;
-    error: string | null;
+    errors: FormError[];
     selectedLeague: string | null;
 }

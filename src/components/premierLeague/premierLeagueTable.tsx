@@ -9,7 +9,7 @@ import { selectTables } from '@/reducers/sportsSlice';
 const PremierLeagueTable = () => {
     const items = useAppSelector(selectTables).PremierLeague;
 
-    const filteredItems = items.filter((item) => item.gamesPlayed > 0 && !item.selectable);
+    const filteredItems = items.filter((item) => item.gamesPlayed > 0);
 
     return (
         <div className="flex flex-1 overflow-y-auto">
@@ -26,16 +26,18 @@ const PremierLeagueTable = () => {
                 </TableHeader>
                 <TableBody className="flex-1 overflow-y-auto">
                     {filteredItems.length ? (
-                        filteredItems.map((item) => (
-                            <TableRow key={item.id}>
-                                <TableCell>{item.name}</TableCell>
-                                <TableCell>{item.gamesPlayed}</TableCell>
-                                <TableCell>{item.wins}</TableCell>
-                                <TableCell>{item.draws}</TableCell>
-                                <TableCell>{item.losses}</TableCell>
-                                <TableCell>{item.points}</TableCell>
-                            </TableRow>
-                        ))
+                        filteredItems
+                            .sort((a, b) => b.points - a.points)
+                            .map((item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{item.gamesPlayed}</TableCell>
+                                    <TableCell>{item.wins}</TableCell>
+                                    <TableCell>{item.draws}</TableCell>
+                                    <TableCell>{item.losses}</TableCell>
+                                    <TableCell>{item.points}</TableCell>
+                                </TableRow>
+                            ))
                     ) : (
                         <TableRow>
                             <TableCell colSpan={6} className="text-center">

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction, current } from '@reduxjs/toolkit';
-import type { TableState, Team, TableType } from '../types/sports.types';
+import type { TableState, Team, TableType, FormError, FormType } from '../types/sports.types';
 import type { RootState } from '@/lib/store';
 import { dummyTeamData } from '@/lib/dummyData';
 
@@ -13,7 +13,7 @@ const initialState: TableState = {
         Wimbledon: [],
     },
     loading: false,
-    error: null,
+    errors: [],
     selectedLeague: null,
 };
 
@@ -49,11 +49,20 @@ const sportsSlice = createSlice({
         addTeam: (state, action: PayloadAction<{ tableType: TableType; name: string }>) => {
             const { tableType, name } = action.payload;
 
+            // Clear previous errors for this form and table
+            state.errors = state.errors.filter(
+                (error) => !(error.tableType === tableType && error.formType === 'addTeam'),
+            );
+
             // Check for duplicate names
             console.log(current(state.tables.PremierLeague));
             if (state.tables[tableType].some((standing) => standing.name.toLowerCase() === name.toLowerCase())) {
                 console.log('Duplicate team name detected - slice');
-                state.error = 'Team with this name already exists';
+                state.errors.push({
+                    tableType,
+                    formType: 'addTeam',
+                    message: 'Team with this name already exists',
+                });
                 return;
             }
 
@@ -70,16 +79,24 @@ const sportsSlice = createSlice({
             };
 
             state.tables[tableType].push(newTeam);
-            state.error = null;
         },
 
         addScore: (state, action: PayloadAction<{ tableType: TableType; data: z.infer<typeof AddScoreSchema> }>) => {
             const { tableType, data } = action.payload;
             const { teamOneId, teamTwoId, teamOneScore, teamTwoScore } = data;
 
+            // Clear previous errors for this form and table
+            state.errors = state.errors.filter(
+                (error) => !(error.tableType === tableType && error.formType === 'addScore'),
+            );
+
             // Validate scores are provided
             if (teamOneScore === undefined || teamTwoScore === undefined) {
-                state.error = 'Both scores are required';
+                state.errors.push({
+                    tableType,
+                    formType: 'addScore',
+                    message: 'Both scores are required',
+                });
                 return;
             }
 
@@ -88,13 +105,21 @@ const sportsSlice = createSlice({
             const teamTwo = state.tables[tableType].find((team) => team.id === teamTwoId);
 
             if (!teamOne || !teamTwo) {
-                state.error = 'One or both teams not found';
+                state.errors.push({
+                    tableType,
+                    formType: 'addScore',
+                    message: 'One or both teams not found',
+                });
                 return;
             }
 
             // Check if teams have already played against each other
             if (teamOne.playedAgainst.includes(teamTwoId)) {
-                state.error = 'These teams have already played against each other';
+                state.errors.push({
+                    tableType,
+                    formType: 'addScore',
+                    message: 'These teams have already played against each other',
+                });
                 return;
             }
 
@@ -124,8 +149,6 @@ const sportsSlice = createSlice({
                 teamTwo.draws += 1;
                 teamTwo.points += 1;
             }
-
-            state.error = null;
         },
 
         /**
@@ -136,10 +159,20 @@ const sportsSlice = createSlice({
         },
 
         /**
-         * Action to clear error state
+         * Action to clear error for a specific form and table
          */
-        clearError: (state) => {
-            state.error = null;
+        clearError: (state, action: PayloadAction<{ tableType: TableType; formType: FormType }>) => {
+            const { tableType, formType } = action.payload;
+            state.errors = state.errors.filter(
+                (error) => !(error.tableType === tableType && error.formType === formType),
+            );
+        },
+
+        /**
+         * Action to clear all errors
+         */
+        clearAllErrors: (state) => {
+            state.errors = [];
         },
 
         /**
@@ -165,12 +198,19 @@ const sportsSlice = createSlice({
     // },
 });
 
-export const { addTeam, setSelectedLeague, clearError, resetSportsState, addScore } = sportsSlice.actions;
+export const { addTeam, setSelectedLeague, clearError, clearAllErrors, resetSportsState, addScore } =
+    sportsSlice.actions;
 
 export default sportsSlice.reducer;
 
 // Selectors
-export const selectError = (state: RootState) => state.sports.error;
+export const selectErrors = (state: RootState) => state.sports.errors;
+export const selectError =
+    (tableType: TableType, formType: FormType) =>
+    (state: RootState): string | null => {
+        const error = state.sports.errors.find((error) => error.tableType === tableType && error.formType === formType);
+        return error ? error.message : null;
+    };
 export const selectTables = (state: RootState) => state.sports.tables;
 export const selectTable = (tableType: TableType) => (state: RootState) => state.sports.tables[tableType];
 export const selectIsLoading = (state: RootState) => state.sports.loading;

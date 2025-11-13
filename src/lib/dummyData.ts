@@ -8,7 +8,7 @@ export const dummyTeamData: Team[] = [
         losses: 0,
         points: 0,
         draws: 0,
-        gamesPlayed: 12,
+        gamesPlayed: 0,
         selectable: true,
         playedAgainst: [],
     },
@@ -19,7 +19,7 @@ export const dummyTeamData: Team[] = [
         losses: 0,
         points: 0,
         draws: 0,
-        gamesPlayed: 12,
+        gamesPlayed: 0,
         selectable: true,
         playedAgainst: [],
     },
@@ -32,7 +32,7 @@ export const dummyTeamData: Team[] = [
         draws: 1,
         gamesPlayed: 3,
         selectable: false,
-        playedAgainst: [],
+        playedAgainst: ['PremierLeague-liverpool', 'PremierLeague-arsenal', 'PremierLeague-chelsea'],
     },
     {
         id: `PremierLeague-liverpool`,
@@ -43,7 +43,7 @@ export const dummyTeamData: Team[] = [
         draws: 0,
         gamesPlayed: 3,
         selectable: false,
-        playedAgainst: [],
+        playedAgainst: ['PremierLeague-manchester_united', 'PremierLeague-arsenal', 'PremierLeague-chelsea'],
     },
     {
         id: `PremierLeague-arsenal`,
@@ -54,7 +54,7 @@ export const dummyTeamData: Team[] = [
         draws: 2,
         gamesPlayed: 3,
         selectable: false,
-        playedAgainst: [],
+        playedAgainst: ['PremierLeague-manchester_united', 'PremierLeague-liverpool', 'PremierLeague-chelsea'],
     },
     {
         id: `PremierLeague-chelsea`,
@@ -65,6 +65,6 @@ export const dummyTeamData: Team[] = [
         draws: 1,
         gamesPlayed: 3,
         selectable: false,
-        playedAgainst: [],
+        playedAgainst: ['PremierLeague-manchester_united', 'PremierLeague-liverpool', 'PremierLeague-arsenal'],
     },
 ];

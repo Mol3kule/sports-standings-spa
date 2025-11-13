@@ -11,7 +11,8 @@ import { AddScoreSchema } from '@/validators/addScoreSchema';
 
 export const usePremierLeagueForm = () => {
     const dispatch = useAppDispatch();
-    const error = useAppSelector(selectError);
+    const addTeamError = useAppSelector(selectError('PremierLeague', 'addTeam'));
+    const addScoreError = useAppSelector(selectError('PremierLeague', 'addScore'));
 
     const addTeamForm = useForm<z.infer<typeof AddTeamSchema>>({
         resolver: zodResolver(AddTeamSchema),
@@ -48,15 +49,30 @@ export const usePremierLeagueForm = () => {
         );
     };
 
-    // Set form error if Redux returns an error
+    // Set form errors if Redux returns errors
     useEffect(() => {
-        if (error) {
+        if (addTeamError) {
             addTeamForm.setError('name', {
                 type: 'manual',
-                message: error,
+                message: addTeamError,
             });
+        } else {
+            addTeamForm.clearErrors('name');
         }
-    }, [error]);
+    }, [addTeamError, addTeamForm]);
+
+    useEffect(() => {
+        if (addScoreError) {
+            addTeamScoreForm.setError('root', {
+                type: 'manual',
+                message: addScoreError,
+            });
+        } else {
+            addTeamScoreForm.clearErrors('root');
+            // Reset form on successful submission
+            addTeamScoreForm.reset();
+        }
+    }, [addScoreError, addTeamScoreForm]);
 
     return {
         addTeamForm,

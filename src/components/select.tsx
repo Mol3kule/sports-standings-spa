@@ -10,7 +10,7 @@ interface iSelect {
 export const Select = ({ placeholder, items, value, onChange }: iSelect) => {
     return (
         <ShadcnSelect value={value} onValueChange={onChange}>
-            <SelectTrigger size="sm" className="w-full font-bold">
+            <SelectTrigger size="sm" className="w-full font-bold rounded-sm">
                 <SelectValue placeholder={placeholder ?? 'Select an option'} />
             </SelectTrigger>
             <SelectContent>
