@@ -33,4 +33,4 @@ Archieved functionality:
 
 ### Project is deployed on `Vercel`
 
-Open [Vercel](https://sports-standings-56kndw2db-mol3kule-gmailcoms-projects.vercel.app/)
+Open [Vercel](https://sports-standings-spa.vercel.app/)
