@@ -1,6 +1,6 @@
 import { Team } from '@/types/sports.types';
 
-export const dummyTeamData: Team[] = [
+export const premierLeagueData: Team[] = [
     {
         id: `PremierLeague-home_team`,
         name: 'Home Team',
@@ -9,8 +9,8 @@ export const dummyTeamData: Team[] = [
         points: 0,
         draws: 0,
         gamesPlayed: 0,
-        selectable: true,
         playedAgainst: [],
+        scoreHistory: [],
     },
     {
         id: `PremierLeague-away_team`,
@@ -20,8 +20,8 @@ export const dummyTeamData: Team[] = [
         points: 0,
         draws: 0,
         gamesPlayed: 0,
-        selectable: true,
         playedAgainst: [],
+        scoreHistory: [],
     },
     {
         id: `PremierLeague-manchester_united`,
@@ -31,8 +31,8 @@ export const dummyTeamData: Team[] = [
         points: 7,
         draws: 1,
         gamesPlayed: 3,
-        selectable: false,
         playedAgainst: ['PremierLeague-liverpool', 'PremierLeague-arsenal', 'PremierLeague-chelsea'],
+        scoreHistory: [],
     },
     {
         id: `PremierLeague-liverpool`,
@@ -42,8 +42,8 @@ export const dummyTeamData: Team[] = [
         points: 6,
         draws: 0,
         gamesPlayed: 3,
-        selectable: false,
         playedAgainst: ['PremierLeague-manchester_united', 'PremierLeague-arsenal', 'PremierLeague-chelsea'],
+        scoreHistory: [],
     },
     {
         id: `PremierLeague-arsenal`,
@@ -53,8 +53,8 @@ export const dummyTeamData: Team[] = [
         points: 5,
         draws: 2,
         gamesPlayed: 3,
-        selectable: false,
         playedAgainst: ['PremierLeague-manchester_united', 'PremierLeague-liverpool', 'PremierLeague-chelsea'],
+        scoreHistory: [],
     },
     {
         id: `PremierLeague-chelsea`,
@@ -64,7 +64,7 @@ export const dummyTeamData: Team[] = [
         points: 4,
         draws: 1,
         gamesPlayed: 3,
-        selectable: false,
         playedAgainst: ['PremierLeague-manchester_united', 'PremierLeague-liverpool', 'PremierLeague-arsenal'],
+        scoreHistory: [],
     },
 ];

@@ -1,5 +1,6 @@
 'use client';
 
+import { TableType } from '@/types/sports.types';
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface ActionButtonContextType {
@@ -11,9 +12,9 @@ interface ActionButtonContextType {
 
 const ActionButtonContext = createContext<ActionButtonContextType | undefined>(undefined);
 
-export const ActionButtonProvider = ({ children }: { children: ReactNode }) => {
-    const [isAddTeamVisible, setIsAddTeamVisible] = useState(false);
-    const [isAddScoreVisible, setIsAddScoreVisible] = useState(false);
+export const ActionButtonProvider = ({ children, tableType }: { children: ReactNode; tableType: TableType }) => {
+    const [isAddTeamVisible, setIsAddTeamVisible] = useState(tableType === 'PremierLeague');
+    const [isAddScoreVisible, setIsAddScoreVisible] = useState(tableType === 'PremierLeague');
 
     const toggleAddTeamVisibility = () => {
         setIsAddTeamVisible(!isAddTeamVisible);

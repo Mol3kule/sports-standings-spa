@@ -8,11 +8,12 @@ import { AddTeamSchema } from '@/validators/addTeamShema';
 import { z } from 'zod';
 import { useEffect } from 'react';
 import { AddScoreSchema } from '@/validators/addScoreSchema';
+import { TableType } from '@/types/sports.types';
 
-export const usePremierLeagueForm = () => {
+export const useTableForm = (type: TableType) => {
     const dispatch = useAppDispatch();
-    const addTeamError = useAppSelector(selectError('PremierLeague', 'addTeam'));
-    const addScoreError = useAppSelector(selectError('PremierLeague', 'addScore'));
+    const addTeamError = useAppSelector(selectError(type, 'addTeam'));
+    const addScoreError = useAppSelector(selectError(type, 'addScore'));
 
     const addTeamForm = useForm<z.infer<typeof AddTeamSchema>>({
         resolver: zodResolver(AddTeamSchema),
@@ -24,7 +25,7 @@ export const usePremierLeagueForm = () => {
     const handleAddTeamSubmit = (data: z.infer<typeof AddTeamSchema>) => {
         dispatch(
             addTeam({
-                tableType: 'PremierLeague',
+                tableType: type,
                 name: data.name.trim(),
             }),
         );
@@ -45,7 +46,7 @@ export const usePremierLeagueForm = () => {
     const handleAddTeamScoreSubmit = (data: z.infer<typeof AddScoreSchema>) => {
         dispatch(
             addScore({
-                tableType: 'PremierLeague',
+                tableType: type,
                 data,
             }),
         );

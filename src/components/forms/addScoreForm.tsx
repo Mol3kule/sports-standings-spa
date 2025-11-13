@@ -1,9 +1,9 @@
 'use client';
 
 import { Label } from '@/components/ui/label';
-import { FormWrapper } from '../../formWrapper';
+import { FormWrapper } from '../formWrapper';
 import { Controller } from 'react-hook-form';
-import { usePremierLeagueForm } from '@/hooks/usePremierLeagueForm';
+import { useTableForm } from '@/hooks/usePremierLeagueForm';
 import { Select } from '@/components/select';
 import { useAppSelector } from '@/lib/store';
 import { selectTables } from '@/reducers/sportsSlice';
@@ -11,37 +11,52 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ErrorMessage } from '@/components/ui/errorMessage';
 import { useActionButton } from '@/components/context/actionButtonContext';
+import { TableType } from '@/types/sports.types';
+import { getCountryList } from '@/lib/countries';
+import { cn } from '@/lib/utils';
 
-const AddScoreForm = () => {
-    const { addTeamScoreForm, handleAddTeamScoreSubmit } = usePremierLeagueForm();
+interface iAddScoreForm {
+    tableType: TableType;
+}
+
+const AddScoreForm = ({ tableType }: iAddScoreForm) => {
+    const { addTeamScoreForm, handleAddTeamScoreSubmit } = useTableForm(tableType);
 
     const { isAddScoreVisible } = useActionButton();
-    const premierLeagueTable = useAppSelector(selectTables).PremierLeague;
+    const tableData = useAppSelector(selectTables)[tableType];
 
     const [teamOneId, teamTwoId] = addTeamScoreForm.watch(['teamOneId', 'teamTwoId']);
 
     // Helper function to check if a team has available opponents
     const hasAvailableOpponents = (teamId: string) => {
-        const team = premierLeagueTable.find((t) => t.id === teamId);
+        const team = tableData.find((t) => t.id === teamId);
         if (!team) return false;
 
         // Count how many teams this team hasn't played against yet (excluding itself)
-        const availableOpponents = premierLeagueTable.filter(
+        const availableOpponents = tableData.filter(
             (opponent) => opponent.id !== teamId && !team.playedAgainst.includes(opponent.id),
         );
 
         return availableOpponents.length > 0;
     };
 
+    const isEurobasket = tableType === 'EuroBasket';
+    const countries = getCountryList();
+
     // Only show teams that have available opponents they haven't played against
-    const selectableTeams = premierLeagueTable.filter((team) => hasAvailableOpponents(team.id));
-    const teamItems = selectableTeams.map((team) => ({ value: team.id, label: team.name }));
+    const selectableTeams = tableData.filter((team) => hasAvailableOpponents(team.id));
+    const teamItems = selectableTeams.map((team) => ({
+        value: team.id,
+        label: isEurobasket
+            ? countries.find((c) => c.name.toLowerCase() === team.name.toLowerCase())?.flag + ' ' + team.name
+            : team.name,
+    }));
 
     // Filter out the selected team and teams that have already played against the selected team
     const getAvailableTeamsFor = (selectedTeamId?: string, excludeTeamId?: string) => {
         if (!selectedTeamId) return teamItems;
 
-        const selectedTeam = premierLeagueTable.find((t) => t.id === selectedTeamId);
+        const selectedTeam = tableData.find((t) => t.id === selectedTeamId);
         if (!selectedTeam) return teamItems;
 
         return teamItems.filter(
@@ -58,28 +73,33 @@ const AddScoreForm = () => {
         <>
             {isAddScoreVisible && (
                 <FormWrapper
-                    className="bg-green-dark"
+                    className={`${isEurobasket && 'bg-green-dark'}`}
                     onSubmit={addTeamScoreForm.handleSubmit(handleAddTeamScoreSubmit)}
                 >
-                    <Label htmlFor="add-score-input" className="capitalize font-semibold text-white">
+                    <Label
+                        htmlFor="add-score-input"
+                        className={cn('capitalize font-semibold', isEurobasket && 'text-white')}
+                    >
                         Add score
                     </Label>
                     {rootError && <ErrorMessage message={rootError.message} />}
                     <div className="grid grid-cols-2 gap-2">
                         <RenderItem
+                            tableType={tableType}
                             formControl={addTeamScoreForm.control}
                             isTeamOne={true}
                             label={teamItems.find((team) => team.value === teamOneId?.toString())?.label}
                             items={teamOneItems}
                         />
                         <RenderItem
+                            tableType={tableType}
                             formControl={addTeamScoreForm.control}
                             isTeamOne={false}
                             label={teamItems.find((team) => team.value === teamTwoId?.toString())?.label}
                             items={teamTwoItems}
                         />
                     </div>
-                    <Button variant={'orange'} className="w-full">
+                    <Button variant={isEurobasket ? 'orange' : 'default'} className="w-full">
                         Add score
                     </Button>
                 </FormWrapper>
@@ -89,16 +109,21 @@ const AddScoreForm = () => {
 };
 
 const RenderItem = ({
+    tableType,
     formControl,
     isTeamOne,
     items,
     label,
 }: {
-    formControl: ReturnType<typeof usePremierLeagueForm>['addTeamScoreForm']['control'];
+    tableType: TableType;
+    formControl: ReturnType<typeof useTableForm>['addTeamScoreForm']['control'];
     isTeamOne: boolean;
     items: { value: string; label: string }[];
     label?: string | number;
 }) => {
+    const isPremierLeague = tableType === 'PremierLeague';
+    const isEurobasket = tableType === 'EuroBasket';
+
     return (
         <div className="grid gap-2">
             <Controller
@@ -107,7 +132,21 @@ const RenderItem = ({
                 render={({ field, fieldState }) => (
                     <div className="truncate">
                         <Select
-                            className={`${field.value ? 'bg-green-default text-white' : ''} border-green-default`}
+                            className={cn(
+                                field.value && isPremierLeague
+                                    ? 'bg-grey-default'
+                                    : isEurobasket && 'bg-green-default text-white',
+                                !field.value && 'text-white',
+                                isEurobasket && 'border-green-default',
+                            )}
+                            selectContentClassName={isEurobasket ? 'bg-green-default border-green-dark border-2' : ''}
+                            itemClassName={
+                                isEurobasket
+                                    ? 'text-white bg-green-default focus:bg-green-dark focus:text-white font-montserrat'
+                                    : isPremierLeague
+                                    ? 'font-inter'
+                                    : ''
+                            }
                             placeholder="Select a team"
                             value={field.value?.toString()}
                             onChange={field.onChange}
@@ -124,7 +163,13 @@ const RenderItem = ({
                     <div>
                         <Input
                             type="number"
-                            className="h-7 placeholder:font-semibold rounded-sm border-2 border-green-default placeholder:text-white/60"
+                            className={cn(
+                                'h-7 placeholder:font-semibold rounded-sm border-2',
+                                isEurobasket && 'border-green-default placeholder:text-white/60 text-white',
+                            )}
+                            // className={`${
+                            //     isEurobasket ? 'border-green-default placeholder:text-white/60' : ''
+                            // } h-7 placeholder:font-semibold rounded-sm border-2`}
                             {...field}
                             value={field.value ? Number(field.value) : ''}
                             onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}

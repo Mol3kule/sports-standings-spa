@@ -1,15 +1,19 @@
 import { createSlice, createAsyncThunk, PayloadAction, current } from '@reduxjs/toolkit';
 import type { TableState, Team, TableType, FormError, FormType } from '../types/sports.types';
 import type { RootState } from '@/lib/store';
-import { dummyTeamData } from '@/lib/dummyData';
+import { premierLeagueData } from '@/lib/premierLeagueData';
+import { Country } from 'country-state-city';
 
 import { z } from 'zod';
 import { AddScoreSchema } from '@/validators/addScoreSchema';
+import { euroBasketData } from '@/lib/eurobasketData';
+import { cache } from 'react';
+import { getCountryList } from '@/lib/countries';
 
 const initialState: TableState = {
     tables: {
-        PremierLeague: dummyTeamData,
-        EuroBasket: [],
+        PremierLeague: premierLeagueData,
+        EuroBasket: euroBasketData,
         Wimbledon: [],
     },
     loading: false,
@@ -54,10 +58,22 @@ const sportsSlice = createSlice({
                 (error) => !(error.tableType === tableType && error.formType === 'addTeam'),
             );
 
+            if (tableType === 'EuroBasket') {
+                const countries = getCountryList();
+                const country = countries.find((c) => c.name.toLowerCase() === name.toLowerCase());
+
+                if (!country) {
+                    state.errors.push({
+                        tableType,
+                        formType: 'addTeam',
+                        message: 'Country not found for the given team name',
+                    });
+                    return;
+                }
+            }
+
             // Check for duplicate names
-            console.log(current(state.tables.PremierLeague));
             if (state.tables[tableType].some((standing) => standing.name.toLowerCase() === name.toLowerCase())) {
-                console.log('Duplicate team name detected - slice');
                 state.errors.push({
                     tableType,
                     formType: 'addTeam',
@@ -74,8 +90,8 @@ const sportsSlice = createSlice({
                 draws: 0,
                 points: 0,
                 gamesPlayed: 0,
-                selectable: true,
                 playedAgainst: [],
+                scoreHistory: [],
             };
 
             state.tables[tableType].push(newTeam);
@@ -149,6 +165,21 @@ const sportsSlice = createSlice({
                 teamTwo.draws += 1;
                 teamTwo.points += 1;
             }
+
+            // Update score history
+            const timestamp = Date.now();
+            teamOne.scoreHistory.push({
+                opponentId: teamTwoId,
+                teamScore: teamOneScore,
+                opponentScore: teamTwoScore,
+                timestamp,
+            });
+            teamTwo.scoreHistory.push({
+                opponentId: teamOneId,
+                teamScore: teamTwoScore,
+                opponentScore: teamOneScore,
+                timestamp,
+            });
         },
 
         /**

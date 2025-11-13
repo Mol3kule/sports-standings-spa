@@ -7,17 +7,27 @@ interface iSelect {
     value: string;
     onChange?: (value: string) => void;
     className?: string;
+    selectContentClassName?: string;
+    itemClassName?: string;
 }
 
-export const Select = ({ placeholder, items, value, onChange, className }: iSelect) => {
+export const Select = ({
+    placeholder,
+    items,
+    value,
+    onChange,
+    className,
+    selectContentClassName,
+    itemClassName,
+}: iSelect) => {
     return (
         <ShadcnSelect value={value} onValueChange={onChange}>
             <SelectTrigger size="sm" className={cn('w-full font-semibold rounded-sm border-2', className)}>
                 <SelectValue placeholder={placeholder ?? 'Select an option'} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={selectContentClassName}>
                 {items.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
+                    <SelectItem key={item.value} value={item.value} className={itemClassName}>
                         {item.label}
                     </SelectItem>
                 ))}

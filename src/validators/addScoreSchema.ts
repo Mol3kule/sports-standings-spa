@@ -32,4 +32,30 @@ export const AddScoreSchema = z
             message: 'Score is required',
             path: ['teamTwoScore'],
         },
+    )
+    .refine(
+        (data) => {
+            if (data.teamOneScore && data.teamOneScore <= 999) {
+                return true;
+            }
+
+            return false;
+        },
+        {
+            message: 'Less or equal to 999',
+            path: ['teamOneScore'],
+        },
+    )
+    .refine(
+        (data) => {
+            if (data.teamTwoScore && data.teamTwoScore <= 999) {
+                return true;
+            }
+
+            return false;
+        },
+        {
+            message: 'Less or equal to 999',
+            path: ['teamTwoScore'],
+        },
     );

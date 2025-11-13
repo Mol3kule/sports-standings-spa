@@ -1,12 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-// import AddScoreForm from './forms/addScoreForm';
 import AddTeamForm from './forms/addTeamForm';
-// import PremierLeagueTable from './premierLeagueTable';
 import BasketballIcon from '../icons/basketball.svg';
 import Image from 'next/image';
 import { ActionButtonProvider } from '../context/actionButtonContext';
 import ActionButtons from './actionButtons';
-import AddScoreForm from './forms/addScoreForm';
+import AddScoreForm from '../forms/addScoreForm';
+import EuroBasketTable from './euroBasketTable';
+import ScoreTab from './scoreTab';
 
 const EuroBasketCard = () => {
     return (
@@ -15,12 +15,15 @@ const EuroBasketCard = () => {
                 <Image src={BasketballIcon} alt="Basketball Icon" width={24} height={24} />
                 <CardTitle className="text-xl uppercase font-normal">Eurobasket</CardTitle>
             </CardHeader>
-            <ActionButtonProvider>
+            <ActionButtonProvider tableType="EuroBasket">
                 <CardContent className="flex flex-col px-4 pb-4 gap-4 overflow-hidden flex-1">
                     <ActionButtons />
-                    <AddTeamForm />
-                    <AddScoreForm />
-                    {/* <PremierLeagueTable /> */}
+                    <div className="flex-1 px-3 gap-4 flex flex-col overflow-hidden">
+                        <AddTeamForm />
+                        <AddScoreForm tableType="EuroBasket" />
+                        <ScoreTab />
+                        <EuroBasketTable />
+                    </div>
                 </CardContent>
             </ActionButtonProvider>
         </Card>

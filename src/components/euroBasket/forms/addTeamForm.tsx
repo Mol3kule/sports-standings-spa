@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FormWrapper } from '../../formWrapper';
-import { usePremierLeagueForm } from '@/hooks/usePremierLeagueForm';
+import { useTableForm } from '@/hooks/usePremierLeagueForm';
 import { Controller } from 'react-hook-form';
 import { ErrorMessage } from '@/components/ui/errorMessage';
 import { useActionButton } from '@/components/context/actionButtonContext';
 
 const AddTeamForm = () => {
-    const { addTeamForm, handleAddTeamSubmit } = usePremierLeagueForm();
+    const { addTeamForm, handleAddTeamSubmit } = useTableForm('EuroBasket');
 
     const { isAddTeamVisible } = useActionButton();
 

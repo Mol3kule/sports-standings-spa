@@ -9,8 +9,9 @@ export interface Team {
     draws: number;
     points: number;
     gamesPlayed: number;
-    selectable: boolean;
     playedAgainst: string[];
+    isPlayer?: boolean;
+    scoreHistory: { opponentId: string; teamScore: number; opponentScore: number; timestamp: number }[];
 }
 
 export interface FormError {
