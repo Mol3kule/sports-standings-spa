@@ -8,6 +8,7 @@ interface ActionButtonContextType {
     toggleAddTeamVisibility: () => void;
     isAddScoreVisible: boolean;
     toggleAddScoreVisibility: () => void;
+    tableType: TableType;
 }
 
 const ActionButtonContext = createContext<ActionButtonContextType | undefined>(undefined);
@@ -28,7 +29,13 @@ export const ActionButtonProvider = ({ children, tableType }: { children: ReactN
 
     return (
         <ActionButtonContext.Provider
-            value={{ isAddTeamVisible, toggleAddTeamVisibility, isAddScoreVisible, toggleAddScoreVisibility }}
+            value={{
+                isAddTeamVisible,
+                toggleAddTeamVisibility,
+                isAddScoreVisible,
+                toggleAddScoreVisibility,
+                tableType,
+            }}
         >
             {children}
         </ActionButtonContext.Provider>

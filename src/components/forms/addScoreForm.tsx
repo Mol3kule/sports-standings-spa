@@ -41,6 +41,7 @@ const AddScoreForm = ({ tableType }: iAddScoreForm) => {
     };
 
     const isEurobasket = tableType === 'EuroBasket';
+    const isWimbledon = tableType === 'Wimbledon';
     const countries = getCountryList();
 
     // Only show teams that have available opponents they haven't played against
@@ -99,7 +100,7 @@ const AddScoreForm = ({ tableType }: iAddScoreForm) => {
                             items={teamTwoItems}
                         />
                     </div>
-                    <Button variant={isEurobasket ? 'orange' : 'default'} className="w-full">
+                    <Button variant={isEurobasket ? 'orange' : isWimbledon ? 'purple' : 'default'} className="w-full">
                         Add score
                     </Button>
                 </FormWrapper>
@@ -145,7 +146,7 @@ const RenderItem = ({
                                     ? 'text-white bg-green-default focus:bg-green-dark focus:text-white font-montserrat'
                                     : isPremierLeague
                                     ? 'font-inter'
-                                    : ''
+                                    : 'font-space-mono'
                             }
                             placeholder="Select a team"
                             value={field.value?.toString()}

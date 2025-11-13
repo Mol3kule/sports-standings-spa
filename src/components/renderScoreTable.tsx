@@ -2,6 +2,7 @@ import { Team } from '@/types/sports.types';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { cn } from '@/lib/utils';
+import { Check, X } from 'lucide-react';
 
 interface iRenderScoreTable {
     items: Team[];
@@ -12,6 +13,7 @@ interface iRenderScoreTable {
     rowClassName?: string;
     displayPlayedMatches?: boolean;
     displayDraws?: boolean;
+    displayIcons?: boolean;
 }
 
 const RenderScoreTable = ({
@@ -23,9 +25,10 @@ const RenderScoreTable = ({
     rowClassName,
     displayPlayedMatches = true,
     displayDraws = true,
+    displayIcons = false,
 }: iRenderScoreTable) => {
     const CustomTableCell = ({ children }: { children: React.ReactNode }) => (
-        <TableCell className={cellClassName}>{children}</TableCell>
+        <TableCell className={cn('text-center', cellClassName)}>{children}</TableCell>
     );
 
     return (
@@ -33,7 +36,7 @@ const RenderScoreTable = ({
             <Table className="flex-1 font-semibold">
                 <TableHeader className={cn('bg-[#f3f4f6] sticky top-0 z-10', tableHeaderClassName)}>
                     <TableRow className={cn(rowClassName, tableHeaderRowClassName)}>
-                        <CustomTableHead className={cn('w-[50%]', tableHeadClassName)}>
+                        <CustomTableHead className={cn('w-[50%] text-left', tableHeadClassName)}>
                             {items[0]?.isPlayer ? 'Player' : 'Team'}
                         </CustomTableHead>
                         {displayPlayedMatches && <CustomTableHead className={tableHeadClassName}>P/M</CustomTableHead>}
@@ -49,11 +52,31 @@ const RenderScoreTable = ({
                             .sort((a, b) => b.points - a.points)
                             .map((item) => (
                                 <TableRow key={item.id} className={rowClassName}>
-                                    <CustomTableCell>{item.name}</CustomTableCell>
+                                    <CustomTableCell>
+                                        <div className="text-start">{item.name}</div>
+                                    </CustomTableCell>
                                     {displayPlayedMatches && <CustomTableCell>{item.gamesPlayed}</CustomTableCell>}
-                                    <CustomTableCell>{item.wins}</CustomTableCell>
+                                    <CustomTableCell>
+                                        {displayIcons ? (
+                                            <span className="flex items-center gap-1 justify-center">
+                                                {item.wins}
+                                                <Check className="text-green-500" size={15} />
+                                            </span>
+                                        ) : (
+                                            item.wins
+                                        )}
+                                    </CustomTableCell>
                                     {displayDraws && <CustomTableCell>{item.draws}</CustomTableCell>}
-                                    <CustomTableCell>{item.losses}</CustomTableCell>
+                                    <CustomTableCell>
+                                        {displayIcons ? (
+                                            <span className="flex items-center gap-1 justify-center">
+                                                {item.losses}
+                                                <X className="text-red-500" size={15} />
+                                            </span>
+                                        ) : (
+                                            item.losses
+                                        )}
+                                    </CustomTableCell>
                                     <CustomTableCell>{item.points}</CustomTableCell>
                                 </TableRow>
                             ))
@@ -71,7 +94,7 @@ const RenderScoreTable = ({
 };
 
 const CustomTableHead = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <TableHead className={className}>{children}</TableHead>
+    <TableHead className={cn('text-center', className)}>{children}</TableHead>
 );
 
 export default RenderScoreTable;

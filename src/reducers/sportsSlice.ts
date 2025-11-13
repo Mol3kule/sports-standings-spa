@@ -1,20 +1,18 @@
-import { createSlice, createAsyncThunk, PayloadAction, current } from '@reduxjs/toolkit';
-import type { TableState, Team, TableType, FormError, FormType } from '../types/sports.types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { TableState, Team, TableType, FormType } from '../types/sports.types';
 import type { RootState } from '@/lib/store';
 import { premierLeagueData } from '@/lib/premierLeagueData';
-import { Country } from 'country-state-city';
-
-import { z } from 'zod';
 import { AddScoreSchema } from '@/validators/addScoreSchema';
 import { euroBasketData } from '@/lib/eurobasketData';
-import { cache } from 'react';
 import { getCountryList } from '@/lib/countries';
+import { wimbledonData } from '@/lib/wimbledonData';
+import { z } from 'zod';
 
 const initialState: TableState = {
     tables: {
         PremierLeague: premierLeagueData,
         EuroBasket: euroBasketData,
-        Wimbledon: [],
+        Wimbledon: wimbledonData,
     },
     loading: false,
     errors: [],
@@ -92,6 +90,7 @@ const sportsSlice = createSlice({
                 gamesPlayed: 0,
                 playedAgainst: [],
                 scoreHistory: [],
+                isPlayer: tableType === 'Wimbledon' ? true : false,
             };
 
             state.tables[tableType].push(newTeam);

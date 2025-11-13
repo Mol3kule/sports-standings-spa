@@ -17,6 +17,7 @@
   --font-roboto: var(--font-roboto);
   --font-montserrat: var(--font-montserrat);
   --font-bebas-neue: var(--font-bebas-neue);
+  --font-space-mono: var(--font-space-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -57,7 +58,9 @@
   --color-grey-border: var(--grey-border);
   --color-green-default: var(--green-default);
   --color-green-dark: var(--green-dark);
+  --color-green-light: var(--green-light);
   --color-orange-default: var(--orange-default);
+  --color-purple-default: var(--purple-default);
 }
 
 :root {
@@ -99,7 +102,9 @@
   --grey-border: oklch(0.9235 0.0052 247.88);
   --green-default: oklch(0.2726 0.051 175.86);
   --green-dark: oklch(0.2183 0.0395 180.47);
+  --green-light: oklch(0.4472 0.1159 152.68);
   --orange-default: oklch(0.6996 0.201959 44.4414);
+  --purple-default: oklch(0.2926 0.1363 312.26);
 }
 
 .dark {
@@ -140,7 +145,9 @@
   --grey-border: oklch(0.9235 0.0052 247.88);
   --green-default: oklch(0.2726 0.051 175.86);
   --green-dark: oklch(0.2183 0.0395 180.47);
+  --green-light: oklch(0.4472 0.1159 152.68);
   --orange-default: oklch(0.6996 0.201959 44.4414);
+  --purple-default: oklch(0.2926 0.1363 312.26);
 }
 
 @layer base {

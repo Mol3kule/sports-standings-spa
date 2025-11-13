@@ -1,7 +1,7 @@
 import { ActionButtonProvider } from '../context/actionButtonContext';
 import AddScoreForm from '../forms/addScoreForm';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import AddTeamForm from './forms/addTeamForm';
+import AddTeamForm from '../forms/addTeamForm';
 import PremierLeagueTable from './premierLeagueTable';
 
 const PremierLeagueCard = () => {

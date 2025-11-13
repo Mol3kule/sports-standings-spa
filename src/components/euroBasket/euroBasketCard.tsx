@@ -1,12 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import AddTeamForm from './forms/addTeamForm';
 import BasketballIcon from '../icons/basketball.svg';
 import Image from 'next/image';
 import { ActionButtonProvider } from '../context/actionButtonContext';
-import ActionButtons from './actionButtons';
+import ActionButtons from '../actionButtons';
 import AddScoreForm from '../forms/addScoreForm';
 import EuroBasketTable from './euroBasketTable';
 import ScoreTab from './scoreTab';
+import AddTeamForm from '../forms/addTeamForm';
 
 const EuroBasketCard = () => {
     return (
