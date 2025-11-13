@@ -168,9 +168,6 @@ const RenderItem = ({
                                 'h-7 placeholder:font-semibold rounded-sm border-2',
                                 isEurobasket && 'border-green-default placeholder:text-white/60 text-white',
                             )}
-                            // className={`${
-                            //     isEurobasket ? 'border-green-default placeholder:text-white/60' : ''
-                            // } h-7 placeholder:font-semibold rounded-sm border-2`}
                             {...field}
                             value={field.value ? Number(field.value) : ''}
                             onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}

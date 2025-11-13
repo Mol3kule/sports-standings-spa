@@ -95,7 +95,7 @@ const ScoreTab = () => {
             {latestTwo.map(({ teamOne, teamTwo, teamOneScore, teamTwoScore }, index) => (
                 <div key={index} className="flex items-center justify-between p-2 border-b border-b-green-dark rounded">
                     <div className="flex items-center gap-2 flex-1">
-                        <span className="font-semibold text-sm text-white">{teamOne.name}</span>
+                        <span className="font-semibold text-sm text-white">{teamOne.name} </span>
                         <span className="text-xs text-white/60">vs</span>
                         <span className="font-semibold text-sm text-white">{teamTwo.name}</span>
                     </div>

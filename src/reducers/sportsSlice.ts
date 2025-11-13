@@ -19,32 +19,17 @@ const initialState: TableState = {
     selectedLeague: null,
 };
 
-// export const fetchStandings = createAsyncThunk('sports/fetchStandings', async (league: string, { rejectWithValue }) => {
-//     try {
-//         // Mock data testing
-//         const mockStandings: Standing[] = [
-//             {
-//                 position: 1,
-//                 team: { id: '1', name: 'Team A', wins: 10, losses: 2, points: 30 },
-//                 gamesPlayed: 12,
-//             },
-//             {
-//                 position: 2,
-//                 team: { id: '2', name: 'Team B', wins: 8, losses: 4, points: 24 },
-//                 gamesPlayed: 12,
-//             },
-//         ];
-
-//         return mockStandings;
-//     } catch (err) {
-//         return rejectWithValue(err instanceof Error ? err.message : 'Failed to fetch standings');
-//     }
-// });
-
 const sportsSlice = createSlice({
     name: 'sports',
     initialState,
     reducers: {
+        /**
+         * Action to hydrate state from localStorage
+         */
+        hydrate: (state, action: PayloadAction<TableState>) => {
+            return action.payload;
+        },
+
         /**
          * Action to add a team
          */
@@ -210,25 +195,9 @@ const sportsSlice = createSlice({
          */
         resetSportsState: () => initialState,
     },
-    // extraReducers: (builder) => {
-    //     builder
-    //         .addCase(fetchStandings.pending, (state) => {
-    //             state.loading = true;
-    //             state.error = null;
-    //         })
-    //         .addCase(fetchStandings.fulfilled, (state, action) => {
-    //             console.log(action.payload);
-    //             // state.loading = false;
-    //             // state.tables. = action.payload;
-    //         })
-    //         .addCase(fetchStandings.rejected, (state, action) => {
-    //             state.loading = false;
-    //             state.error = action.payload as string;
-    //         });
-    // },
 });
 
-export const { addTeam, setSelectedLeague, clearError, clearAllErrors, resetSportsState, addScore } =
+export const { hydrate, addTeam, setSelectedLeague, clearError, clearAllErrors, resetSportsState, addScore } =
     sportsSlice.actions;
 
 export default sportsSlice.reducer;
