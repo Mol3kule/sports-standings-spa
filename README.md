@@ -1,5 +1,7 @@
 ## Front-End Technical Challenge – Sports Standings App
 
+![alt text](public/demo.png)
+
 ### 1. Setup
 
 Install all required npm packages
