@@ -169,8 +169,11 @@ const RenderItem = ({
                                 isEurobasket && 'border-green-default placeholder:text-white/60 text-white',
                             )}
                             {...field}
-                            value={field.value ? Number(field.value) : ''}
-                            onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                            value={field.value !== undefined && field.value !== null ? Number(field.value) : ''}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                field.onChange(value === '' ? undefined : Number(value));
+                            }}
                             placeholder={`${label ?? 'Team'} Score`}
                             disabled={!label}
                             min={0}

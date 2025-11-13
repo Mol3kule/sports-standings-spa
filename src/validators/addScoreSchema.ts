@@ -35,7 +35,7 @@ export const AddScoreSchema = z
     )
     .refine(
         (data) => {
-            if (data.teamOneScore && data.teamOneScore <= 999) {
+            if (data.teamOneScore !== undefined && data.teamOneScore <= 999) {
                 return true;
             }
 
@@ -48,7 +48,7 @@ export const AddScoreSchema = z
     )
     .refine(
         (data) => {
-            if (data.teamTwoScore && data.teamTwoScore <= 999) {
+            if (data.teamTwoScore !== undefined && data.teamTwoScore <= 999) {
                 return true;
             }
 
