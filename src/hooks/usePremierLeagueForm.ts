@@ -28,6 +28,8 @@ export const usePremierLeagueForm = () => {
                 name: data.name.trim(),
             }),
         );
+
+        addTeamForm.reset();
     };
 
     const addTeamScoreForm = useForm<z.infer<typeof AddScoreSchema>>({
@@ -47,6 +49,8 @@ export const usePremierLeagueForm = () => {
                 data,
             }),
         );
+
+        addTeamScoreForm.reset();
     };
 
     // Set form errors if Redux returns errors

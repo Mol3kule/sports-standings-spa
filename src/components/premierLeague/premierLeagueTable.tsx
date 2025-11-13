@@ -13,7 +13,7 @@ const PremierLeagueTable = () => {
 
     return (
         <div className="flex flex-1 overflow-y-auto">
-            <Table className="flex-1">
+            <Table className="flex-1 font-semibold">
                 <TableHeader className="bg-[#f3f4f6] sticky top-0 z-10">
                     <TableRow>
                         <TableHead className="w-[50%]">Team</TableHead>

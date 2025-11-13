@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FormWrapper } from './formWrapper';
+import { FormWrapper } from '../../formWrapper';
 import { usePremierLeagueForm } from '@/hooks/usePremierLeagueForm';
 import { Controller } from 'react-hook-form';
 import { ErrorMessage } from '@/components/ui/errorMessage';
@@ -13,7 +13,7 @@ const AddTeamForm = () => {
 
     return (
         <FormWrapper onSubmit={addTeamForm.handleSubmit(handleAddTeamSubmit)}>
-            <Label htmlFor="add-team-input" className="capitalize font-bold">
+            <Label htmlFor="add-team-input" className="capitalize font-semibold">
                 Add team
             </Label>
             <Controller
@@ -26,9 +26,10 @@ const AddTeamForm = () => {
                                 id="add-team-input"
                                 placeholder="Team name"
                                 className="capitalize h-7 bg-white border-2 border-grey-border"
+                                autoComplete="off"
                                 {...field}
                             />
-                            <Button className="h-7 px-2">Add</Button>
+                            <Button className="h-7 px-3">Add</Button>
                         </div>
                         {fieldState.error && <ErrorMessage message={fieldState.error.message} />}
                     </div>

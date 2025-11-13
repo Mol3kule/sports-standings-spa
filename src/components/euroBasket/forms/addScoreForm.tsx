@@ -10,9 +10,12 @@ import { selectTables } from '@/reducers/sportsSlice';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ErrorMessage } from '@/components/ui/errorMessage';
+import { useActionButton } from '@/components/context/actionButtonContext';
 
 const AddScoreForm = () => {
     const { addTeamScoreForm, handleAddTeamScoreSubmit } = usePremierLeagueForm();
+
+    const { isAddScoreVisible } = useActionButton();
     const premierLeagueTable = useAppSelector(selectTables).PremierLeague;
 
     const [teamOneId, teamTwoId] = addTeamScoreForm.watch(['teamOneId', 'teamTwoId']);
@@ -52,27 +55,36 @@ const AddScoreForm = () => {
     const rootError = addTeamScoreForm.formState.errors.root;
 
     return (
-        <FormWrapper onSubmit={addTeamScoreForm.handleSubmit(handleAddTeamScoreSubmit)}>
-            <Label htmlFor="add-score-input" className="capitalize font-bold">
-                Add score
-            </Label>
-            {rootError && <ErrorMessage message={rootError.message} />}
-            <div className="grid grid-cols-2 gap-2">
-                <RenderItem
-                    formControl={addTeamScoreForm.control}
-                    isTeamOne={true}
-                    label={teamItems.find((team) => team.value === teamOneId?.toString())?.label}
-                    items={teamOneItems}
-                />
-                <RenderItem
-                    formControl={addTeamScoreForm.control}
-                    isTeamOne={false}
-                    label={teamItems.find((team) => team.value === teamTwoId?.toString())?.label}
-                    items={teamTwoItems}
-                />
-            </div>
-            <Button className="capitalize h-7 w-full">Add score</Button>
-        </FormWrapper>
+        <>
+            {isAddScoreVisible && (
+                <FormWrapper
+                    className="bg-green-dark"
+                    onSubmit={addTeamScoreForm.handleSubmit(handleAddTeamScoreSubmit)}
+                >
+                    <Label htmlFor="add-score-input" className="capitalize font-semibold text-white">
+                        Add score
+                    </Label>
+                    {rootError && <ErrorMessage message={rootError.message} />}
+                    <div className="grid grid-cols-2 gap-2">
+                        <RenderItem
+                            formControl={addTeamScoreForm.control}
+                            isTeamOne={true}
+                            label={teamItems.find((team) => team.value === teamOneId?.toString())?.label}
+                            items={teamOneItems}
+                        />
+                        <RenderItem
+                            formControl={addTeamScoreForm.control}
+                            isTeamOne={false}
+                            label={teamItems.find((team) => team.value === teamTwoId?.toString())?.label}
+                            items={teamTwoItems}
+                        />
+                    </div>
+                    <Button variant={'orange'} className="w-full">
+                        Add score
+                    </Button>
+                </FormWrapper>
+            )}
+        </>
     );
 };
 
@@ -95,7 +107,7 @@ const RenderItem = ({
                 render={({ field, fieldState }) => (
                     <div className="truncate">
                         <Select
-                            className={field.value ? 'bg-grey-default' : ''}
+                            className={`${field.value ? 'bg-green-default text-white' : ''} border-green-default`}
                             placeholder="Select a team"
                             value={field.value?.toString()}
                             onChange={field.onChange}
@@ -112,7 +124,7 @@ const RenderItem = ({
                     <div>
                         <Input
                             type="number"
-                            className="h-7 placeholder:font-semibold rounded-sm border-2"
+                            className="h-7 placeholder:font-semibold rounded-sm border-2 border-green-default placeholder:text-white/60"
                             {...field}
                             value={field.value ? Number(field.value) : ''}
                             onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
